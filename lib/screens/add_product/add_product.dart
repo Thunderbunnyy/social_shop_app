@@ -1,0 +1,485 @@
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:provider/provider.dart';
+import 'package:social_shop_app/Providers/options_providers.dart';
+import 'package:social_shop_app/config/constants.dart';
+import 'package:social_shop_app/data/base/api_response.dart';
+import 'package:social_shop_app/data/models/product.dart';
+import 'package:social_shop_app/data/models/user.dart';
+import 'package:social_shop_app/data/repositories/SubCategories/provider_api_subcategory.dart';
+import 'package:social_shop_app/data/repositories/categories/provider_api_category.dart';
+import 'package:social_shop_app/data/repositories/products/contract_provider_product.dart';
+import 'package:social_shop_app/data/repositories/products/provider_api_product.dart';
+import 'package:social_shop_app/screens/add_product/alert_form.dart';
+import 'package:social_shop_app/screens/add_product/choose_category_screen.dart';
+
+class AddProduct extends StatefulWidget {
+  //final String subCategoryId;
+  final ProductProviderContract productProvider;
+
+  AddProduct({Key key, this.productProvider}) : super(key: key);
+
+  @override
+  _AddProductState createState() => _AddProductState();
+}
+
+class _AddProductState extends State<AddProduct> {
+  var formKey = GlobalKey<FormState>();
+
+  final productNameController = TextEditingController();
+  final productPriceController = TextEditingController();
+  final productDescController = TextEditingController();
+
+  List<ParseFile> imageList = [];
+
+  //File _pickedImage;
+
+  Map<String, ParseFile> files = {
+    '0': ParseFile(null),
+    '1': ParseFile(null),
+    '2': ParseFile(null),
+    '3': ParseFile(null),
+    '4': ParseFile(null)
+  };
+
+  String _errorMessage;
+  Map<dynamic, dynamic> map;
+  String subid = 'No Information Yet';
+
+  Future<ParseFileBase> getImages() {
+    files.values.forEach((element) {
+      element.download();
+    });
+  }
+
+  void updateInformation(String information) {
+    setState(() => subid = information);
+  }
+
+  void moveToChooseCategory() async {
+    final information = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            fullscreenDialog: true,
+            builder: (context) => ChooseCategory(
+                CategoryProviderApi(), SubCategoryProviderApi())));
+    updateInformation(information);
+  }
+
+  bool _validateAndSave() {
+    final FormState form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _validateAndSubmit() async {
+    if (_validateAndSave()) {
+      try {
+        final User currentUser =
+            await ParseUser.currentUser(customUserObject: User.clone());
+        final Product product = Product();
+        product.set('keyTitle', productNameController.text.trim());
+        product.set('keyDescription', productDescController.text.trim());
+        product.set('keyPrice', productPriceController.text.trim());
+        product.set('keyOptions', map);
+        product.set('keyImages', files);
+        product.set('keyOwner', currentUser.objectId);
+        product.set('keySubcategoryId', subid);
+
+        ApiResponse response = await ProductProviderApi().create(product);
+        await product.save();
+        if (response.success) {
+          print(product);
+          print('sahit');
+        } else {
+          setState(() {
+            print('lé');
+            _errorMessage = response.error.toString();
+          });
+        }
+      } catch (e) {
+        print('Error: $e');
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+        elevation: 0,
+        title: Text('Sell Something'),
+        leading: IconButton(
+          icon: SvgPicture.asset("assets/icons/cancel.svg"),
+          onPressed: () {},
+        ),
+      ),
+      body: Column(
+        children: [
+          //----------------mta3 el images--------------------
+          Container(
+            //20% of height
+            height: size.height * 0.2,
+            child: Stack(children: [
+              Container(
+                height: size.height * 0.2 - 27,
+                decoration: BoxDecoration(
+                    color: kPrimaryColor,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(36),
+                        bottomRight: Radius.circular(36))),
+              ),
+
+              //--------------------horiz scroll-------------------
+              Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    padding: EdgeInsets.only(top: 17),
+                    margin: EdgeInsets.symmetric(horizontal: 15.0),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) =>
+                            Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(width: 12),
+                            Container(
+                              height: 185.0,
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: files.length,
+                                itemBuilder: (context, index) => InkWell(
+                                  onTap: () async {
+                                    final ImagePicker _picker = ImagePicker();
+                                    PickedFile pickedFile = await _picker
+                                        .getImage(source: ImageSource.gallery);
+                                    files['$index'] =
+                                        ParseFile(File(pickedFile.path));
+                                    //getImages();
+                                    setState(() {
+                                      imageList = files.values.toList();
+                                      print(imageList);
+                                      print(files);
+                                    });
+                                  },
+                                  child: FutureBuilder<ParseFileBase>(
+                                    future: getImages(),
+                                    builder: (BuildContext context,
+                                            AsyncSnapshot<ParseFileBase>
+                                                snapshot) =>
+                                        Container(
+                                            height: 185.0,
+                                            width: 185.0,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(25))),
+                                            child: files['$index'] == null ? Container(
+                                                    child: Icon(
+                                                    Icons.add_a_photo,
+                                                    size: 50,
+                                                  ))
+                                                : Stack(children: [
+                                                    Container(
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    25)),
+                                                        child: files['$index'] == null ? Container(
+                                                          child: Icon(
+                                                                      Icons.add_a_photo,
+                                                                      size: 50,
+                                                                    ),
+                                                        )
+                                                                : Image.file((files['$index']).file,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    width: double
+                                                                        .infinity,
+                                                                  ),
+                                                      ),
+                                                    ),
+                                                    CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.red[600],
+                                                      child: IconButton(
+                                                        icon: Icon(Icons.clear,
+                                                            color:
+                                                                Colors.white),
+                                                        onPressed: () {
+                                                          files.removeWhere(
+                                                              (key, value) =>
+                                                                  key ==
+                                                                  '$index');
+                                                          imageList.removeAt(index);
+                                                          print(files);
+                                                          print(imageList);
+                                                        },
+                                                      ),
+                                                    )
+                                                  ])),
+                                  ),
+                                ),
+                                separatorBuilder:
+                                    (BuildContext context, int index) {
+                                  return SizedBox(width: 12);
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  )),
+            ]),
+          ),
+
+          //-------------------fields---------------------
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
+              child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        validator: (val) {
+                          if (val.isEmpty) return "Title is empty !";
+                          return null;
+                        },
+                        controller: productNameController,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.transparent),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.transparent),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12))),
+                            hintText: 'Title ',
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            errorBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.red)),
+                            alignLabelWithHint: true),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: TextFormField(
+                          controller: productDescController,
+                          validator: (val) {
+                            if (val.isEmpty) {
+                              return "Description is empty !";
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.multiline,
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12))),
+                              hintText:
+                                  'Description : Exemple : Sablito bnin fama bel fraise w orange w karmous w choklata...',
+                              labelStyle: TextStyle(
+                                color: Colors.black,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              alignLabelWithHint: true,
+                              hintMaxLines: 50),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: TextFormField(
+                          validator: (val) {
+                            if (val.isEmpty) return "Price is empty !";
+                            return null;
+                          },
+                          controller: productPriceController,
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12))),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(12))),
+                              hintText: 'Price ',
+                              labelStyle: TextStyle(
+                                color: Colors.black,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              errorBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.red)),
+                              alignLabelWithHint: true),
+                        ),
+                      ),
+
+                      //----------------------- Categories ----------------------------------------------
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: StatefulBuilder(builder: (context, builder) {
+                          return Container(
+                            height: size.height * 0.07,
+                            width: size.width * 0.9,
+                            decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(12)),
+                                border: Border.all(
+                                    color: Colors.transparent, width: 2.0)),
+                            child: TextButton(
+                              onPressed: () {
+                                moveToChooseCategory();
+                              },
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Consumer<OptionsProvider>(
+                                    builder: (context, subcategory, child) {
+                                  return Text(
+                                    'Category : ${subcategory.chosenSubcategory}',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black54,
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+
+                      //------------------ Add specs according to the product----------------------------
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: SizedBox(
+                          width: size.width * 0.9,
+                          child: TextButton(
+                            child: Text(
+                              'Add Options',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                              ),
+                            ),
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(13.0),
+                                        side:
+                                            BorderSide(color: kAccentColor)))),
+                            onPressed: () {
+                              //------ Add Options ------------
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertForm();
+                                  });
+                            },
+                          ),
+                        ),
+                      ),
+
+                      //--------------------- added options ----------------------
+                      Consumer<OptionsProvider>(
+                          builder: (context, options, child) {
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Visibility(
+                              visible: options.isVisible,
+                              child: SizedBox(
+                                  width: size.width * 0.9,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    itemCount: options.optionsMap.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      map = options.optionsMap;
+                                      String key = map.keys.elementAt(index);
+                                      List values = map.values.elementAt(index);
+                                      return new Column(
+                                        children: <Widget>[
+                                          new ListTile(
+                                            title: new Text("$key"),
+                                            subtitle: Container(
+                                              height: size.height * 0.05,
+                                              width: size.width * 0.9,
+                                              child: ListView(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                shrinkWrap: true,
+                                                children: List<Widget>.generate(
+                                                    values.length,
+                                                    // place the length of the array here
+                                                    (int index) {
+                                                  return Chip(
+                                                    label: Text(
+                                                        '${values[index]}'),
+                                                  );
+                                                }).toList(),
+                                              ),
+                                            ),
+                                          ),
+                                          new Divider(
+                                            height: 2,
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ))),
+                        );
+                      })
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                _validateAndSubmit();
+              },
+              child: Text('Add'))
+        ],
+      ),
+    );
+  }
+}
