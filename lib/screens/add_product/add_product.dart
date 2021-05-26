@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:social_shop_app/Providers/options_providers.dart';
+import 'package:social_shop_app/components/build_image.dart';
 import 'package:social_shop_app/config/constants.dart';
 import 'package:social_shop_app/data/base/api_response.dart';
 import 'package:social_shop_app/data/models/product.dart';
@@ -33,27 +35,25 @@ class _AddProductState extends State<AddProduct> {
   final productPriceController = TextEditingController();
   final productDescController = TextEditingController();
 
-  List<ParseFile> imageList = [];
+  List<dynamic> imageList = [];
 
   //File _pickedImage;
 
-  Map<String, ParseFile> files = {
-    '0': ParseFile(null),
-    '1': ParseFile(null),
-    '2': ParseFile(null),
-    '3': ParseFile(null),
-    '4': ParseFile(null)
-  };
+  Map<int, dynamic> files = {0: null, 1: null, 2: null, 3: null, 4: null};
 
   String _errorMessage;
   Map<dynamic, dynamic> map;
   String subid = 'No Information Yet';
 
-  Future<ParseFileBase> getImages() {
-    files.values.forEach((element) {
-      element.download();
-    });
-  }
+  // getImages() {
+  //   files.values.forEach((element) {
+  //     element.download();
+  //   });
+  // }
+
+  final Product product = Product();
+  ParseFileBase parseFile;
+  PickedFile pickedFile;
 
   void updateInformation(String information) {
     setState(() => subid = information);
@@ -83,12 +83,11 @@ class _AddProductState extends State<AddProduct> {
       try {
         final User currentUser =
             await ParseUser.currentUser(customUserObject: User.clone());
-        final Product product = Product();
         product.set('keyTitle', productNameController.text.trim());
         product.set('keyDescription', productDescController.text.trim());
         product.set('keyPrice', productPriceController.text.trim());
         product.set('keyOptions', map);
-        product.set('keyImages', files);
+        product.set('keyImages', imageList);
         product.set('keyOwner', currentUser.objectId);
         product.set('keySubcategoryId', subid);
 
@@ -164,54 +163,62 @@ class _AddProductState extends State<AddProduct> {
                                 itemCount: files.length,
                                 itemBuilder: (context, index) => InkWell(
                                   onTap: () async {
-                                    final ImagePicker _picker = ImagePicker();
-                                    PickedFile pickedFile = await _picker
-                                        .getImage(source: ImageSource.gallery);
-                                    files['$index'] =
-                                        ParseFile(File(pickedFile.path));
-                                    //getImages();
+
+                                    // final ImagePicker _picker = ImagePicker();
+                                    // PickedFile pickedFile = await _picker
+                                    //     .getImage(source: ImageSource.gallery);
+                                    // var file = File(pickedFile.path);
+                                    // files[index] =
+                                    //     ParseFile(file, name: "image$index.png");
+
+                                    PickedFile pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+
+                                    if (kIsWeb) {
+                                      ParseWebFile file = ParseWebFile(null, name: null, url: pickedFile.path);
+                                      await file.download();
+                                      parseFile = ParseWebFile(file.file, name: file.name);
+                                    } else {
+                                      parseFile = ParseFile(File(pickedFile.path));
+                                    }
+
                                     setState(() {
-                                      imageList = files.values.toList();
-                                      print(imageList);
-                                      print(files);
+                                      files[index] = parseFile;
+                                      imageList.add(parseFile);
+                                      print('list of images : $imageList');
+                                      print(' list of files : $files');
                                     });
+
                                   },
-                                  child: FutureBuilder<ParseFileBase>(
-                                    future: getImages(),
-                                    builder: (BuildContext context,
-                                            AsyncSnapshot<ParseFileBase>
-                                                snapshot) =>
-                                        Container(
-                                            height: 185.0,
-                                            width: 185.0,
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(25))),
-                                            child: files['$index'] == null ? Container(
-                                                    child: Icon(
-                                                    Icons.add_a_photo,
-                                                    size: 50,
-                                                  ))
-                                                : Stack(children: [
+                                  child: Container(
+                                      height: 185.0,
+                                      width: 185.0,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(25))),
+                                      child: files[index] == null
+                                          ? Container(
+                                              child: Icon(
+                                              Icons.add_a_photo,
+                                              size: 50,
+                                            ))
+                                          : Stack(children: [
                                                     Container(
                                                       child: ClipRRect(
                                                         borderRadius:
                                                             BorderRadius.all(
                                                                 Radius.circular(
                                                                     25)),
-                                                        child: files['$index'] == null ? Container(
-                                                          child: Icon(
-                                                                      Icons.add_a_photo,
+                                                        child:
+                                                            files[index] == null
+                                                                ? Container(
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .add_a_photo,
                                                                       size: 50,
                                                                     ),
-                                                        )
-                                                                : Image.file((files['$index']).file,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                    width: double
-                                                                        .infinity,
-                                                                  ),
+                                                                  )
+                                                                : buildImage(files[index]),
                                                       ),
                                                     ),
                                                     CircleAvatar(
@@ -224,16 +231,15 @@ class _AddProductState extends State<AddProduct> {
                                                         onPressed: () {
                                                           files.removeWhere(
                                                               (key, value) =>
-                                                                  key ==
-                                                                  '$index');
-                                                          imageList.removeAt(index);
+                                                                  key == index);
+                                                          imageList
+                                                              .removeAt(index);
                                                           print(files);
                                                           print(imageList);
                                                         },
                                                       ),
                                                     )
                                                   ])),
-                                  ),
                                 ),
                                 separatorBuilder:
                                     (BuildContext context, int index) {

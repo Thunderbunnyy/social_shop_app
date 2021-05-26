@@ -1,6 +1,8 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:social_shop_app/config/palette.dart';
+import 'package:social_shop_app/data/repositories/products/provider_api_product.dart';
 import 'package:social_shop_app/screens/activity.dart';
 import 'package:social_shop_app/screens/add_product/add_product.dart';
 import 'package:social_shop_app/screens/discover.dart';
@@ -35,13 +37,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         body: SizedBox.expand(
           child: PageView(
-            allowImplicitScrolling: false,
             controller: _pageController,
             onPageChanged: (index) {
               setState(() => currentIndex = index);
             },
             children: <Widget>[
-              Home(),
+              Home(ProductProviderApi()),
               Activity(),
               Discover(),
               AddProduct(),
@@ -60,31 +61,31 @@ class _HomePageState extends State<HomePage> {
             BottomNavyBarItem(
               icon: SvgPicture.asset("assets/icons/Home.svg"),
               title: Text("Home", style: TextStyle(color: Colors.black)),
-              activeColor: kAccentColor,
+              activeColor: Palette.seafoam,
               inactiveColor: Colors.black,
             ),
             BottomNavyBarItem(
               icon: SvgPicture.asset("assets/icons/notifications.svg"),
               title: Text("Activity", style: TextStyle(color: Colors.black)),
-              activeColor: kAccentColor,
+              activeColor: Palette.seafoam,
               inactiveColor: Colors.black,
             ),
             BottomNavyBarItem(
               icon: SvgPicture.asset("assets/icons/bolt.svg"),
               title: Text("Discover", style: TextStyle(color: Colors.black)),
-              activeColor: kAccentColor,
+              activeColor: Palette.seafoam,
               inactiveColor: Colors.black,
             ),
             BottomNavyBarItem(
               icon: SvgPicture.asset("assets/icons/shutter.svg"),
               title: Text("Sell", style: TextStyle(color: Colors.black)),
-              activeColor: kAccentColor,
+              activeColor: Palette.seafoam,
               inactiveColor: Colors.black,
             ),
             BottomNavyBarItem(
               icon: SvgPicture.asset("assets/icons/Profile.svg"),
               title: Text("Profile", style: TextStyle(color: Colors.black)),
-              activeColor: kAccentColor,
+              activeColor: Palette.seafoam,
               inactiveColor: Colors.black,
             ),
 

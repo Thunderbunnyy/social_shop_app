@@ -3,9 +3,9 @@ import 'package:social_shop_app/data/models/product.dart';
 
 class Details extends StatelessWidget {
 
-  final Product product;
+  final String productId;
 
-  const Details({Key key, this.product}) : super(key: key);
+  const Details({Key key, this.productId}) : super(key: key);
 
 //
 //   @override

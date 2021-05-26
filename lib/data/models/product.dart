@@ -2,7 +2,7 @@ import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:social_shop_app/data/models/sub_category.dart';
 import 'package:social_shop_app/data/models/user.dart';
 
-const String keyProduct = 'Product';
+const String keyProduct = 'product';
 const String keyTitle ='Title';
 const String keyDescription='Description';
 const String keyPrice= 'Price';
@@ -35,8 +35,8 @@ class Product extends ParseObject implements ParseCloneable{
   Map<String,dynamic> get options =>get<Map<String,dynamic>>(keyOptions);
   set options(Map<String,dynamic> options) => set<Map<String,dynamic>>(keyOptions, options);
 
-  List<ParseFile> get images =>get<List<ParseFile>>(keyImages);
-  set images(List<ParseFile> images) => set<List<ParseFile>>(keyImages, images);
+  List<dynamic> get images =>get<List<dynamic>>(keyImages);
+  set images(List<dynamic> images) => set<List<dynamic>>(keyImages, images);
 
   User get owner => get<User>(keyOwner);
   set owner(User owner) => set<User>(keyOwner,owner);

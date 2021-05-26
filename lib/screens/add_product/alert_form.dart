@@ -9,7 +9,7 @@ class AlertForm extends StatefulWidget {
 
 class _AlertFormState extends State<AlertForm> {
 
-  final formKey = GlobalKey<FormState>();
+  final formKey1 = GlobalKey<FormState>();
   TextEditingController optionNameController = new TextEditingController();
 
   List<dynamic> optionsList = [];
@@ -18,7 +18,7 @@ class _AlertFormState extends State<AlertForm> {
   int _count = 0;
 
   bool _validateAndSave() {
-    final FormState form = formKey.currentState;
+    final FormState form = formKey1.currentState;
     if (form.validate()) {
       form.save();
       return true;
@@ -86,7 +86,7 @@ class _AlertFormState extends State<AlertForm> {
                 scrollable: true,
                 actions: <Widget>[
                   Form(
-                    key: formKey,
+                    key: formKey1,
                     autovalidateMode: AutovalidateMode.always,
                     child: Column(
                       children: [

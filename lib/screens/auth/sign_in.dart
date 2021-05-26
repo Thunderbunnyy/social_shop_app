@@ -128,23 +128,6 @@ class _SignInState extends State<SignIn> {
                   ),
                   SizedBox(height: 25.0),
                   TextFormField(
-                    controller: emailController,
-                    maxLines: 1,
-                    autofocus: false,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (val) {
-                      return val.isEmpty ? 'Enter an email' : null;
-                    },
-                    decoration: InputDecoration(
-                        labelText: 'EMAIL',
-                        labelStyle: TextStyle(color: Colors.grey),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: kTertiaryColor)),
-                        errorBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red))),
-                  ),
-                  SizedBox(height: 25.0),
-                  TextFormField(
                     controller: passwordController,
                     maxLines: 1,
                     autofocus: false,

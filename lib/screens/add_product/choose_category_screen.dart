@@ -8,7 +8,6 @@ import 'package:social_shop_app/data/models/sub_category.dart';
 import 'package:social_shop_app/data/repositories/SubCategories/contract_provider_subcategory.dart';
 import 'package:social_shop_app/data/repositories/categories/contract_provider_category.dart';
 
-
 class ChooseCategory extends StatefulWidget {
   final CategoryProviderContract _categoryProvider;
   final SubCategoryProviderContract _subcategoryProvider;
