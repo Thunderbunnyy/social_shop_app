@@ -83,16 +83,16 @@ class _AddProductState extends State<AddProduct> {
       try {
         final User currentUser =
             await ParseUser.currentUser(customUserObject: User.clone());
-        product.set('keyTitle', productNameController.text.trim());
-        product.set('keyDescription', productDescController.text.trim());
-        product.set('keyPrice', productPriceController.text.trim());
-        product.set('keyOptions', map);
-        product.set('keyImages', imageList);
-        product.set('keyOwner', currentUser.objectId);
-        product.set('keySubcategoryId', subid);
+        product.set(keyTitle, productNameController.text.trim());
+        product.set(keyDescription, productDescController.text.trim());
+        product.set(keyPrice, productPriceController.text.trim());
+        product.set(keyOptions, map);
+        product.set(keyOwner, currentUser.objectId);
+        product.set(keySubcategoryId, subid);
 
-        ApiResponse response = await ProductProviderApi().create(product);
-        await product.save();
+        ParseResponse response = await product.save();
+        //ApiResponse response = await ProductProviderApi().create(product);
+
         if (response.success) {
           print(product);
           print('sahit');
@@ -182,6 +182,7 @@ class _AddProductState extends State<AddProduct> {
                                     }
 
                                     setState(() {
+                                      product.set(keyImages, imageList);
                                       files[index] = parseFile;
                                       imageList.add(parseFile);
                                       print('list of images : $imageList');

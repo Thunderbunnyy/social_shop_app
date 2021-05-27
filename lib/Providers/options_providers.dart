@@ -5,7 +5,7 @@ class OptionsProvider extends ChangeNotifier {
 
   Map<String, dynamic> optionsMap = {};
   bool isVisible = false;
-  String chosenSubcategory;
+  String chosenSubcategory = 'Choose Category';
 
   setVisibility(){
     isVisible = true;

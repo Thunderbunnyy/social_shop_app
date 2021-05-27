@@ -19,11 +19,11 @@ class ChooseCategory extends StatefulWidget {
 }
 
 class _ChooseCategoryState extends State<ChooseCategory> {
-  List<Category> categories = <Category>[];
-  final Category category = Category();
-
-  List<SubCategory> subcategories = <SubCategory>[];
-  final SubCategory subCategory = SubCategory();
+  // List<Category> categories = <Category>[];
+  // final Category category = Category();
+  //
+  // List<SubCategory> subcategories = <SubCategory>[];
+  // final SubCategory subCategory = SubCategory();
 
   // final List<CategoryViewModel> categories;
   //
