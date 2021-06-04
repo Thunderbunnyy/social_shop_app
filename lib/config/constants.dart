@@ -10,3 +10,4 @@ const kTertiaryColor = Color(0xffFFB69B);
 const keyApplicationId = "appID";
 const keyParseServerUrl = "http://10.0.2.2:1337/parse";
 const String keyParseClientKey = '';
+

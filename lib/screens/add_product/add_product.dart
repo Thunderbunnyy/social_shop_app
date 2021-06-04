@@ -87,7 +87,8 @@ class _AddProductState extends State<AddProduct> {
         product.set(keyDescription, productDescController.text.trim());
         product.set(keyPrice, productPriceController.text.trim());
         product.set(keyOptions, map);
-        product.set(keyOwner, currentUser.objectId);
+        product.set(keyOwner, currentUser.username);
+        product.set(keyOwnerId, currentUser.objectId);
         product.set(keySubcategoryId, subid);
 
         ParseResponse response = await product.save();
@@ -163,7 +164,6 @@ class _AddProductState extends State<AddProduct> {
                                 itemCount: files.length,
                                 itemBuilder: (context, index) => InkWell(
                                   onTap: () async {
-
                                     // final ImagePicker _picker = ImagePicker();
                                     // PickedFile pickedFile = await _picker
                                     //     .getImage(source: ImageSource.gallery);
@@ -171,14 +171,18 @@ class _AddProductState extends State<AddProduct> {
                                     // files[index] =
                                     //     ParseFile(file, name: "image$index.png");
 
-                                    PickedFile pickedFile = await ImagePicker().getImage(source: ImageSource.gallery);
+                                    PickedFile pickedFile = await ImagePicker()
+                                        .getImage(source: ImageSource.gallery);
 
                                     if (kIsWeb) {
-                                      ParseWebFile file = ParseWebFile(null, name: null, url: pickedFile.path);
+                                      ParseWebFile file = ParseWebFile(null,
+                                          name: null, url: pickedFile.path);
                                       await file.download();
-                                      parseFile = ParseWebFile(file.file, name: file.name);
+                                      parseFile = ParseWebFile(file.file,
+                                          name: file.name);
                                     } else {
-                                      parseFile = ParseFile(File(pickedFile.path));
+                                      parseFile =
+                                          ParseFile(File(pickedFile.path));
                                     }
 
                                     setState(() {
@@ -188,7 +192,6 @@ class _AddProductState extends State<AddProduct> {
                                       print('list of images : $imageList');
                                       print(' list of files : $files');
                                     });
-
                                   },
                                   child: Container(
                                       height: 185.0,
@@ -204,43 +207,39 @@ class _AddProductState extends State<AddProduct> {
                                               size: 50,
                                             ))
                                           : Stack(children: [
-                                                    Container(
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    25)),
-                                                        child:
-                                                            files[index] == null
-                                                                ? Container(
-                                                                    child: Icon(
-                                                                      Icons
-                                                                          .add_a_photo,
-                                                                      size: 50,
-                                                                    ),
-                                                                  )
-                                                                : buildImage(files[index]),
-                                                      ),
-                                                    ),
-                                                    CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.red[600],
-                                                      child: IconButton(
-                                                        icon: Icon(Icons.clear,
-                                                            color:
-                                                                Colors.white),
-                                                        onPressed: () {
-                                                          files.removeWhere(
-                                                              (key, value) =>
-                                                                  key == index);
-                                                          imageList
-                                                              .removeAt(index);
-                                                          print(files);
-                                                          print(imageList);
-                                                        },
-                                                      ),
-                                                    )
-                                                  ])),
+                                              Container(
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(25)),
+                                                  child: files[index] == null
+                                                      ? Container(
+                                                          child: Icon(
+                                                            Icons.add_a_photo,
+                                                            size: 50,
+                                                          ),
+                                                        )
+                                                      : buildImage(
+                                                          files[index]),
+                                                ),
+                                              ),
+                                              CircleAvatar(
+                                                backgroundColor:
+                                                    Colors.red[600],
+                                                child: IconButton(
+                                                  icon: Icon(Icons.clear,
+                                                      color: Colors.white),
+                                                  onPressed: () {
+                                                    files.removeWhere(
+                                                        (key, value) =>
+                                                            key == index);
+                                                    imageList.removeAt(index);
+                                                    print(files);
+                                                    print(imageList);
+                                                  },
+                                                ),
+                                              )
+                                            ])),
                                 ),
                                 separatorBuilder:
                                     (BuildContext context, int index) {

@@ -9,6 +9,7 @@ const String keyPrice= 'Price';
 const String keyOptions = 'Options' ;
 const String keyImages = 'Images';
 const String keyOwner = 'Owner';
+const String keyOwnerId = 'Owner_id';
 const String keyStatus = 'Status';
 const String keyLikes = 'Likes';
 const String keySubcategoryId = 'SubcategoryId';
@@ -38,8 +39,11 @@ class Product extends ParseObject implements ParseCloneable{
   List<dynamic> get images =>get<List<dynamic>>(keyImages);
   set images(List<dynamic> images) => set<List<dynamic>>(keyImages, images);
 
-  User get owner => get<User>(keyOwner);
-  set owner(User owner) => set<User>(keyOwner,owner);
+  String get owner => get<String>(keyOwner);
+  set owner(String owner) => set<String>(keyOwner,owner);
+
+  String get ownerId => get<String>(keyOwnerId);
+  set ownerId(String ownerId) => set<String>(keyOwnerId,owner);
 
   bool get status => get<bool>(keyStatus);
   set status(bool status) => set<bool>(keyStatus, status);

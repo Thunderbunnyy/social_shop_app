@@ -15,7 +15,7 @@ class User extends ParseUser implements ParseCloneable {
   static const String keyFollowingNumber = 'Following';
   static const String keyDisplayPicture = 'DisplayPicture';
   static const String keyProducts = 'Products';
-
+  static const String keyProfessional = 'ProAccount';
 
   num get followers =>get<num>(keyFollowersNumber);
   set followers(num followers) => set<num>(keyFollowersNumber, followers);
@@ -30,5 +30,7 @@ class User extends ParseUser implements ParseCloneable {
   List<Product> get products => get<List<Product>>(keyProducts);
   set products(List<Product> products) => set<List<Product>>(keyProducts, products);
 
+  bool get proAccount =>get<bool>(keyProfessional);
+  set proAccount(bool proAccount) => set<bool>(keyProfessional, proAccount);
 
 }

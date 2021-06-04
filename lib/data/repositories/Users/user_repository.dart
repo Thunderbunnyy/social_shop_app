@@ -94,4 +94,6 @@ class UserRepository implements UserProviderContract {
 
 
 
+
+
 }
