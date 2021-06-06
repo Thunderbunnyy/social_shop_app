@@ -1,7 +1,7 @@
 class AppData {
   static final AppData _appData = new AppData._internal();
 
-  Map<String, List<String>> optionsMap = {};
+  Map<String, dynamic> optionsMap = {};
 
   bool isVisible = false;
 

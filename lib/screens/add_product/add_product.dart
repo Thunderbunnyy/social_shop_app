@@ -37,6 +37,8 @@ class _AddProductState extends State<AddProduct> {
 
   List<dynamic> imageList = [];
 
+  OptionsProvider provider;
+
   //File _pickedImage;
 
   Map<int, dynamic> files = {0: null, 1: null, 2: null, 3: null, 4: null};
@@ -95,6 +97,7 @@ class _AddProductState extends State<AddProduct> {
         //ApiResponse response = await ProductProviderApi().create(product);
 
         if (response.success) {
+          //todo reset provider
           print(product);
           print('sahit');
         } else {

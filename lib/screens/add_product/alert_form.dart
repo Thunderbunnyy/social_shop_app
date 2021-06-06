@@ -103,12 +103,12 @@ class _AlertFormState extends State<AlertForm> {
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.transparent),
+                                      BorderSide(color: Colors.transparent),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(12))),
                                   focusedBorder: OutlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Colors.transparent),
+                                      BorderSide(color: Colors.transparent),
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(12))),
                                   hintText: 'Enter Option Title',
@@ -152,13 +152,13 @@ class _AlertFormState extends State<AlertForm> {
                         ),
                         SizedBox(width: 8),
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.red
-                          ),
+                            style: ElevatedButton.styleFrom(
+                                primary: Colors.red
+                            ),
                             onPressed: (){
 
-                          Navigator.pop(context);
-                        }, child: Text('Cancel'))
+                              Navigator.pop(context);
+                            }, child: Text('Cancel'))
                       ],
                     ),
                   )
