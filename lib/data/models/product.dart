@@ -51,7 +51,7 @@ class Product extends ParseObject implements ParseCloneable{
   String get likes =>get<String>(keyLikes);
   set likes(String likes) => set<String>(keyLikes, likes);
 
-  SubCategory get subcategory => get<SubCategory>(keySubcategoryId);
-  set subcategory(SubCategory subcategory) => set<SubCategory>(keySubcategoryId, subcategory);
+  String get subcategory => get<String>(keySubcategoryId);
+  set subcategory(String subcategory) => set<String>(keySubcategoryId, subcategory);
 
 }

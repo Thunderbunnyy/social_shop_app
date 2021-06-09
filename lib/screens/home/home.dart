@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
-import 'package:social_shop_app/components/build_image.dart';
 import 'package:social_shop_app/components/show_loading.dart';
-import 'package:social_shop_app/config/constants.dart';
 import 'package:social_shop_app/data/base/api_response.dart';
 import 'package:social_shop_app/data/models/product.dart';
 import 'package:social_shop_app/data/repositories/products/contract_provider_product.dart';
 import 'package:social_shop_app/screens/details/details_screen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 
 class Home extends StatefulWidget {
   final ProductProviderContract _productProvider;
@@ -52,6 +49,7 @@ class _HomeState extends State<Home> {
                 shrinkWrap: true,
                 itemCount: snapshot.data.results.length,
                 itemBuilder: (BuildContext context, int index) {
+
                   Product products = snapshot.data.results[index];
                   String title = products.title;
                   String description = products.description;

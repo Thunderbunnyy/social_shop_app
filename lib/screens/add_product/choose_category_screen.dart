@@ -94,12 +94,6 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                                             print(subcategory.chosenSubcategory);
                                             print(subid);
                                             setState(() {
-                                              // Navigator.push(
-                                              //   context,
-                                              //   MaterialPageRoute(
-                                              //       builder: (context) =>
-                                              //           AddProduct(subCategoryId: subid)),
-                                              // );
                                               Navigator.pop(context,subid);
                                             });
                                           },

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:provider/provider.dart';
@@ -45,13 +46,7 @@ class _AddProductState extends State<AddProduct> {
 
   String _errorMessage;
   Map<dynamic, dynamic> map;
-  String subid = 'No Information Yet';
-
-  // getImages() {
-  //   files.values.forEach((element) {
-  //     element.download();
-  //   });
-  // }
+  String subid = '';
 
   final Product product = Product();
   ParseFileBase parseFile;
@@ -73,9 +68,30 @@ class _AddProductState extends State<AddProduct> {
 
   bool _validateAndSave() {
     final FormState form = formKey.currentState;
-    if (form.validate()) {
+    if (form.validate() && map.isNotEmpty && subid != null) {
       form.save();
       return true;
+    }else if (subid == null){
+      Fluttertoast.showToast(
+        msg: "Please add a category",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0, // Also possible "TOP" and "CENTER"
+      );
+    }
+    else if (map?.isEmpty ?? true){
+      Fluttertoast.showToast(
+        msg: "Please add at least one image",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0, // Also possible "TOP" and "CENTER"
+      );
     }
     return false;
   }
@@ -167,13 +183,6 @@ class _AddProductState extends State<AddProduct> {
                                 itemCount: files.length,
                                 itemBuilder: (context, index) => InkWell(
                                   onTap: () async {
-                                    // final ImagePicker _picker = ImagePicker();
-                                    // PickedFile pickedFile = await _picker
-                                    //     .getImage(source: ImageSource.gallery);
-                                    // var file = File(pickedFile.path);
-                                    // files[index] =
-                                    //     ParseFile(file, name: "image$index.png");
-
                                     PickedFile pickedFile = await ImagePicker()
                                         .getImage(source: ImageSource.gallery);
 
@@ -187,13 +196,14 @@ class _AddProductState extends State<AddProduct> {
                                       parseFile =
                                           ParseFile(File(pickedFile.path));
                                     }
-
                                     setState(() {
-                                      product.set(keyImages, imageList);
-                                      files[index] = parseFile;
-                                      imageList.add(parseFile);
-                                      print('list of images : $imageList');
-                                      print(' list of files : $files');
+                                      if (pickedFile != null) {
+                                        product.set(keyImages, imageList);
+                                        files[index] = parseFile;
+                                        imageList.add(parseFile);
+                                        print('list of images : $imageList');
+                                        print(' list of files : $files');
+                                      }
                                     });
                                   },
                                   child: Container(
@@ -217,6 +227,10 @@ class _AddProductState extends State<AddProduct> {
                                                           Radius.circular(25)),
                                                   child: files[index] == null
                                                       ? Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        border: Border.all(color: Colors.red),
+                                                    ),
                                                           child: Icon(
                                                             Icons.add_a_photo,
                                                             size: 50,
@@ -269,7 +283,7 @@ class _AddProductState extends State<AddProduct> {
                     children: [
                       TextFormField(
                         validator: (val) {
-                          if (val.isEmpty) return "Title is empty !";
+                          if (val.isEmpty) return "Please add a Title";
                           return null;
                         },
                         controller: productNameController,
@@ -300,7 +314,7 @@ class _AddProductState extends State<AddProduct> {
                           controller: productDescController,
                           validator: (val) {
                             if (val.isEmpty) {
-                              return "Description is empty !";
+                              return "Please add a description";
                             }
                             return null;
                           },
@@ -317,7 +331,7 @@ class _AddProductState extends State<AddProduct> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(12))),
                               hintText:
-                                  'Description : Exemple : Sablito bnin fama bel fraise w orange w karmous w choklata...',
+                                  'Description : mention any details about your product and shipping',
                               labelStyle: TextStyle(
                                 color: Colors.black,
                               ),
@@ -331,7 +345,7 @@ class _AddProductState extends State<AddProduct> {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: TextFormField(
                           validator: (val) {
-                            if (val.isEmpty) return "Price is empty !";
+                            if (val.isEmpty) return "Please add the Price";
                             return null;
                           },
                           controller: productPriceController,
@@ -377,10 +391,21 @@ class _AddProductState extends State<AddProduct> {
                               },
                               child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: Consumer<OptionsProvider>(
-                                    builder: (context, subcategory, child) {
-                                  return Text(
-                                    'Category : ${subcategory.chosenSubcategory}',
+                                child: Selector<OptionsProvider, String>(
+                                    selector: (_, provider) => provider.chosenSubcategory,
+                                    builder: (context, chosenSubcategory, child) {
+                                  // return chosenSubcategory == null ?
+                                  // Fluttertoast.showToast(
+                                  //   msg: "Please add a category",
+                                  //   toastLength: Toast.LENGTH_SHORT,
+                                  //   gravity: ToastGravity.CENTER,
+                                  //   timeInSecForIosWeb: 1,
+                                  //   backgroundColor: Colors.red,
+                                  //   textColor: Colors.white,
+                                  //   fontSize: 16.0,
+                                  // ):
+                                    return Text(
+                                    'Category : $chosenSubcategory',
                                     style: TextStyle(
                                       fontSize: 15,
                                       color: Colors.black54,

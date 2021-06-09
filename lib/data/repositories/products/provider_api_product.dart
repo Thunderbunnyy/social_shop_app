@@ -77,5 +77,23 @@ class ProductProviderApi implements ProductProviderContract {
     return ApiResponse(true, 200, responses, null);
   }
 
+  @override
+  Future<ApiResponse> moreProductsFromUser(String username, String productId) async {
+    QueryBuilder<Product> products = QueryBuilder<Product>(Product())
+    ..whereNotEqualTo('objectId', productId)
+      ..whereEqualTo('Owner', username);
+
+    return getApiResponse<Product>(await products.query());
+  }
+
+  @override
+  Future<ApiResponse> similarProducts(String id, String productId) async {
+    QueryBuilder<Product> products = QueryBuilder<Product>(Product())
+      ..whereNotEqualTo('objectId', productId)
+      ..whereEqualTo('SubcategoryId', id);
+
+    return getApiResponse<Product>(await products.query());
+  }
+
 
 }

@@ -5,6 +5,11 @@ class AppData {
 
   bool isVisible = false;
 
+  String userId;
+  String username;
+  String subcategory;
+  String productId;
+
   factory AppData() {
     return _appData;
   }

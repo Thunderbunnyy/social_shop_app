@@ -17,6 +17,10 @@ abstract class ProductProviderContract {
 
   Future<ApiResponse> getById(String id);
 
+  Future<ApiResponse> moreProductsFromUser(String id, String productId);
+
+  Future<ApiResponse> similarProducts(String id, String productId);
+
   Future<ApiResponse> getAll();
 
   Future<ApiResponse> getNewerThan(DateTime date);
