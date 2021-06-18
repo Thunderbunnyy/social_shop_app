@@ -17,9 +17,7 @@ Widget moreFromUser(String username, String productId){
         if (snapshot.data.success) {
           if (snapshot.data.result == null ||
               snapshot.data.results.isEmpty) {
-            return const Center(
-              child: Text('No Data'),
-            );
+            return Container();
           }
         }
         return SingleChildScrollView(

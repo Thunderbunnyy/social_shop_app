@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:social_shop_app/components/get_user_info.dart';
 import 'package:social_shop_app/components/show_loading.dart';
 import 'package:social_shop_app/data/base/api_response.dart';
 import 'package:social_shop_app/data/models/product.dart';
+import 'package:social_shop_app/data/models/user.dart';
 import 'package:social_shop_app/data/repositories/products/contract_provider_product.dart';
 import 'package:social_shop_app/screens/details/details_screen.dart';
 
@@ -18,12 +21,28 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   getName();
+  // }
+
   @override
   Widget build(BuildContext context) {
+
+    //String username;
+
+    // Future<void> getName() async {
+    //   final User currentUser = await ParseUser.currentUser(customUserObject: User.clone());
+    //   username = currentUser.fullName;
+    // }
+
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         elevation: 0,
+        title: getUserInfo(),
         actions: <Widget>[
           new IconButton(
               icon: SvgPicture.asset("assets/icons/search.svg"),
@@ -40,9 +59,7 @@ class _HomeState extends State<Home> {
             if (snapshot.data.success) {
               if (snapshot.data.result == null ||
                   snapshot.data.results.isEmpty) {
-                return const Center(
-                  child: Text('No Data'),
-                );
+                return Container();
               }
             }
             return ListView.builder(
@@ -130,4 +147,6 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
+
 }

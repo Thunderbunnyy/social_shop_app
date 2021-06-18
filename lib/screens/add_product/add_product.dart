@@ -68,7 +68,7 @@ class _AddProductState extends State<AddProduct> {
 
   bool _validateAndSave() {
     final FormState form = formKey.currentState;
-    if (form.validate() && map.isNotEmpty && subid != null) {
+    if (form.validate() && files.isNotEmpty && subid != null) {
       form.save();
       return true;
     }else if (subid == null){
@@ -82,7 +82,7 @@ class _AddProductState extends State<AddProduct> {
         fontSize: 16.0, // Also possible "TOP" and "CENTER"
       );
     }
-    else if (map?.isEmpty ?? true){
+    else if (files?.isEmpty ?? true){
       Fluttertoast.showToast(
         msg: "Please add at least one image",
         toastLength: Toast.LENGTH_SHORT,
@@ -105,15 +105,19 @@ class _AddProductState extends State<AddProduct> {
         product.set(keyDescription, productDescController.text.trim());
         product.set(keyPrice, productPriceController.text.trim());
         product.set(keyOptions, map);
-        product.set(keyOwner, currentUser.username);
+        product.set(keyOwner, currentUser.fullName);
         product.set(keyOwnerId, currentUser.objectId);
         product.set(keySubcategoryId, subid);
 
         ParseResponse response = await product.save();
         //ApiResponse response = await ProductProviderApi().create(product);
+        // final ParseUser user = await ParseUser.currentUser();
+        // user.setAdd(User.keyProducts, product);
+        // user.update();
+        // user.save();
 
         if (response.success) {
-          //todo reset provider
+
           print(product);
           print('sahit');
         } else {

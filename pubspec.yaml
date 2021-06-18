@@ -47,6 +47,9 @@ dependencies:
   cached_network_image: ^3.0.0
   flutter_card_swipper: ^0.4.0
   fluttertoast: ^8.0.7
+  circular_profile_avatar: ^2.0.0
+  http: ^0.13.3
+  settings_ui: ^1.0.0
 
 
 dev_dependencies:
@@ -80,6 +83,7 @@ flutter:
     - assets/icons/back.svg
     - assets/icons/cancel.svg
     - assets/icons/shutter.svg
+    - assets/icons/moon.svg
     - assets/images/add-image.png
     - assets/images/avatar1.png
     - assets/images/avatar2.png

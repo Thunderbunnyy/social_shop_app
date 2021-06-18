@@ -16,8 +16,6 @@ class DecisionPage extends StatefulWidget {
 class _DecisionPageState extends State<DecisionPage> {
   String _parseServerState = 'One sec...';
 
-  //AsyncMemoizer _memoizer = AsyncMemoizer();
-
   @override
   void initState() {
     super.initState();
@@ -103,11 +101,13 @@ class _DecisionPageState extends State<DecisionPage> {
             keyParseServerUrl,
             debug: true,
             coreStore: await initCoreStore(),
-            autoSendSessionId: true);
+            autoSendSessionId: true,
+        );
 
         final ParseResponse response = await Parse().healthCheck();
         if (response.success) {
           final User currentUser = await ParseUser.currentUser(customUserObject: User.clone());
+          //final ParseUser currentUser = await ParseUser.currentUser();
           //final ParseResponse parseResponse = await ParseUser.getCurrentUserFromServer(currentUser.sessionToken);
           //print(parseResponse);
           print(currentUser);

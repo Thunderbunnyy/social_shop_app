@@ -2,12 +2,16 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:social_shop_app/config/palette.dart';
+import 'package:social_shop_app/data/repositories/SubCategories/contract_provider_subcategory.dart';
+import 'package:social_shop_app/data/repositories/SubCategories/provider_api_subcategory.dart';
+import 'package:social_shop_app/data/repositories/categories/contract_provider_category.dart';
+import 'package:social_shop_app/data/repositories/categories/provider_api_category.dart';
 import 'package:social_shop_app/data/repositories/products/provider_api_product.dart';
 import 'package:social_shop_app/screens/activity.dart';
 import 'package:social_shop_app/screens/add_product/add_product.dart';
-import 'package:social_shop_app/screens/discover.dart';
+import 'discover/discover.dart';
 import 'package:social_shop_app/screens/home/home.dart';
-import 'package:social_shop_app/screens/profile.dart';
+import 'my_profile/profile.dart';
 
 import '../config/constants.dart';
 
@@ -45,7 +49,7 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Home(ProductProviderApi()),
               Activity(),
-              Discover(),
+              Discover(CategoryProviderApi()),
               AddProduct(),
               Profile()
             ],

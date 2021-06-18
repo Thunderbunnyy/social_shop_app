@@ -95,5 +95,13 @@ class ProductProviderApi implements ProductProviderContract {
     return getApiResponse<Product>(await products.query());
   }
 
+  @override
+  Future<ApiResponse> searchForProduct(String id) async {
+    QueryBuilder<Product> products = QueryBuilder<Product>(Product())
+      ..whereEqualTo('SubcategoryId', id);
+
+    return getApiResponse<Product>(await products.query());
+  }
+
 
 }

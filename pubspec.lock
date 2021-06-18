@@ -71,6 +71,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  circular_profile_avatar:
+    dependency: "direct main"
+    description:
+      name: circular_profile_avatar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1-nullsafety"
   clock:
     dependency: transitive
     description:
@@ -213,7 +220,7 @@ packages:
     source: hosted
     version: "2.1.0"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -443,6 +450,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0+2"
+  settings_ui:
+    dependency: "direct main"
+    description:
+      name: settings_ui
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   sign_button:
     dependency: "direct main"
     description:

@@ -6,7 +6,7 @@ class User extends ParseUser implements ParseCloneable {
   User(String username, String password, String emailAddress)
       : super(username, password, emailAddress);
 
-  User.clone() : this(null, null, null);
+  User.clone() : this(null,null,null);
 
   @override
   User clone(Map<String, dynamic> map) => User.clone()..fromJson(map);
@@ -14,8 +14,8 @@ class User extends ParseUser implements ParseCloneable {
   static const String keyFollowersNumber = 'Followers';
   static const String keyFollowingNumber = 'Following';
   static const String keyDisplayPicture = 'DisplayPicture';
+  static const String keyFullName = 'FullName';
   static const String keyProducts = 'Products';
-  static const String keyProfessional = 'ProAccount';
 
   num get followers =>get<num>(keyFollowersNumber);
   set followers(num followers) => set<num>(keyFollowersNumber, followers);
@@ -23,14 +23,11 @@ class User extends ParseUser implements ParseCloneable {
   num get following =>get<num>(keyFollowingNumber);
   set following(num following) => set<num>(keyFollowingNumber, following);
 
-  File get displayPicture => get<File>(keyDisplayPicture);
-  set displayPicture(File displayPicture) =>
-      set<File>(keyDisplayPicture, displayPicture);
+  ParseFile get displayPicture => get<ParseFile>(keyDisplayPicture);
+  set displayPicture(ParseFile displayPicture) =>
+      set<ParseFile>(keyDisplayPicture, displayPicture);
 
-  List<Product> get products => get<List<Product>>(keyProducts);
-  set products(List<Product> products) => set<List<Product>>(keyProducts, products);
-
-  bool get proAccount =>get<bool>(keyProfessional);
-  set proAccount(bool proAccount) => set<bool>(keyProfessional, proAccount);
+  String get fullName => get<String>(keyFullName);
+  set fullName(String products) => set<String>(keyFullName, fullName);
 
 }

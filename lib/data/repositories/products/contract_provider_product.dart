@@ -24,4 +24,6 @@ abstract class ProductProviderContract {
   Future<ApiResponse> getAll();
 
   Future<ApiResponse> getNewerThan(DateTime date);
+
+  Future<ApiResponse> searchForProduct(String id);
 }

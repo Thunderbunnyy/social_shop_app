@@ -14,9 +14,7 @@ Widget similarItems(String subcategory, String productId) {
       if (snapshot.hasData) {
         if (snapshot.data.success) {
           if (snapshot.data.result == null || snapshot.data.results.isEmpty) {
-            return const Center(
-              child: Text('No Data'),
-            );
+            return Container();
           }
         }
         return Container(

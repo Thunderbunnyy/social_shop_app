@@ -1,19 +1,12 @@
-import 'package:carousel_pro/carousel_pro.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swipper/flutter_card_swiper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:parse_server_sdk/parse_server_sdk.dart';
-import 'package:provider/provider.dart';
-import 'package:social_shop_app/Providers/details_provider.dart';
 import 'package:social_shop_app/components/show_loading.dart';
 import 'package:social_shop_app/config/constants.dart';
 import 'package:social_shop_app/config/palette.dart';
 import 'package:social_shop_app/data/base/api_response.dart';
 import 'package:social_shop_app/data/models/product.dart';
-import 'package:social_shop_app/data/models/user.dart';
-import 'package:social_shop_app/data/repositories/products/contract_provider_product.dart';
 import 'package:social_shop_app/data/repositories/products/provider_api_product.dart';
 import 'package:social_shop_app/screens/details/components/more_from_user.dart';
 import 'package:social_shop_app/screens/details/components/similar_items.dart';
@@ -49,9 +42,7 @@ class _DetailsState extends State<Details> {
                           if (snapshot.data.success) {
                             if (snapshot.data.result == null ||
                                 snapshot.data.results.isEmpty) {
-                              return const Center(
-                                child: Text('No Data'),
-                              );
+                              return Container();
                             }
                           }
                           Product product = snapshot.data.result;
@@ -66,7 +57,7 @@ class _DetailsState extends State<Details> {
                             username = product.owner;
                             userId = product.ownerId;
 
-                          String optionKey = options.keys.elementAt(0);
+                          //String optionKey = options.keys.elementAt(0);
 
                           List<dynamic> images = product.images;
 
@@ -182,29 +173,40 @@ class _DetailsState extends State<Details> {
                                   ],
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Row(
+                                  padding: const EdgeInsets.all(25.0),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       // CircleAvatar(
                                       //   radius: 25.0,
                                       //   backgroundImage:
                                       //       AssetImage('assets/images/avatar1.png'),
                                       // ),
-                                      Text(
-                                        '$username -',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            color: Colors.black54),
+                                      Align(
+                                        child: Text(
+                                          '$username',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black54,fontFamily: 'Montserrat'),
+                                        ),
+                                        alignment: Alignment.centerLeft,
                                       ),
-                                      Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 14.0),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                              title,
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black87,fontFamily: 'Montserrat'),
+                                            ),
+                                      ),
+                                      Align(
+                                          alignment: Alignment.centerLeft,
                                           child: Text(
-                                            title,
+                                            '$price DT',
                                             style: TextStyle(
-                                                fontSize: 20,
-                                                color: Colors.black87),
-                                          ))
+                                                fontSize: 18, color: Colors.black87),
+                                          ),)
                                     ],
                                   ),
                                 ),
@@ -220,16 +222,8 @@ class _DetailsState extends State<Details> {
                                 //     ),
                                 //   ),
                                 // ),
-                                Container(
-                                    alignment: Alignment.centerLeft,
-                                    padding: const EdgeInsets.only(
-                                        left: 14.0, top: 8.0),
-                                    child: Text(
-                                      '$price DT',
-                                      style: TextStyle(
-                                          fontSize: 19, color: Colors.black87),
-                                    )),
-                                StatefulBuilder(
+
+                                options == null ? Container() : StatefulBuilder(
                                   builder: (BuildContext context,
                                           StateSetter setState) =>
                                       ListView.builder(
@@ -242,107 +236,110 @@ class _DetailsState extends State<Details> {
                                                 options.keys.elementAt(index);
                                             List<dynamic> valuesOfCurrent =
                                                 options.values.elementAt(index);
-                                            return Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      14.0),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: Text(
-                                                      '$currentKey :',
-                                                      style: TextStyle(
-                                                          fontSize: 19,
-                                                          color:
-                                                              Colors.black87),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 50,
-                                                  width: size.width * 0.9,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                                  .all(
-                                                              Radius.circular(
-                                                                  5.0)),
-                                                      // border: Border.all(
-                                                      //   color: Colors.black,
-                                                      //   width: 1,
-                                                      // ),
-                                                      color: Colors.grey[200]),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 8.0),
-                                                    child:
-                                                        DropdownButton<dynamic>(
-                                                      style: TextStyle(
-                                                          fontSize: 20,
-                                                          color:
-                                                              Colors.black87),
-                                                      isExpanded: true,
-                                                      hint: Text(
-                                                        'Choose an option',
+                                            return Padding(
+                                              padding: const EdgeInsets.fromLTRB(25.0, 0, 25.0, 10.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        '$currentKey :',
                                                         style: TextStyle(
-                                                            fontSize: 18,
+                                                            fontSize: 17,
                                                             color:
                                                                 Colors.black87),
                                                       ),
-                                                      value: chosenValue,
-                                                      onChanged: (newValue) {
-                                                        setState(() {
-                                                          chosenValue =
-                                                              newValue;
-                                                        });
-                                                      },
-                                                      items: valuesOfCurrent
-                                                          .map<
-                                                                  DropdownMenuItem<
-                                                                      dynamic>>(
-                                                              (dynamic
-                                                                      value) =>
-                                                                  DropdownMenuItem<
-                                                                          dynamic>(
-                                                                      value:
+                                                    ),
+                                                  SizedBox(height: 10),
+                                                  Container(
+                                                    height: 50,
+                                                    width: size.width * 0.9,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    5.0)),
+                                                        // border: Border.all(
+                                                        //   color: Colors.black,
+                                                        //   width: 1,
+                                                        // ),
+                                                        color: Colors.grey[200]),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 8.0),
+                                                      child:
+                                                          DropdownButton<dynamic>(
+                                                        style: TextStyle(
+                                                            fontSize: 20,
+                                                            color:
+                                                                Colors.black87),
+                                                        isExpanded: true,
+                                                        hint: Text(
+                                                          'Choose an option',
+                                                          style: TextStyle(
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.black87),
+                                                        ),
+                                                        value: chosenValue,
+                                                        onChanged: (newValue) {
+                                                          setState(() {
+                                                            chosenValue =
+                                                                newValue;
+                                                          });
+                                                        },
+                                                        items: valuesOfCurrent
+                                                            .map<
+                                                                    DropdownMenuItem<
+                                                                        dynamic>>(
+                                                                (dynamic
+                                                                        value) =>
+                                                                    DropdownMenuItem<
+                                                                            dynamic>(
+                                                                        value:
+                                                                            value,
+                                                                        child:
+                                                                            Text(
                                                                           value,
-                                                                      child:
-                                                                          Text(
-                                                                        value,
-                                                                        style: TextStyle(
-                                                                            fontSize:
-                                                                                18,
-                                                                            color:
-                                                                                Colors.black87),
-                                                                      )))
-                                                          .toList(),
+                                                                          style: TextStyle(
+                                                                              fontSize:
+                                                                                  18,
+                                                                              color:
+                                                                                  Colors.black87),
+                                                                        )))
+                                                            .toList(),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             );
                                           }),
                                 ),
-                                MaterialButton(
-                                    minWidth: size.width * 0.9,
-                                    shape: RoundedRectangleBorder(),
-                                    child: Text(
-                                      'Add To Cart',
-                                      style: TextStyle(
-                                          fontSize: 18, color: Colors.black87),
-                                    ),
-                                    onPressed: () {},
-                                    color: Palette.lavender),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 15.0),
+                                  child: MaterialButton(
+                                      minWidth: size.width * 0.9,
+                                      shape: RoundedRectangleBorder(),
+                                      child: Text(
+                                        'Add To Cart',
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.black87),
+                                      ),
+                                      onPressed: () {},
+                                      color: Palette.lavender),
+                                ),
                                 Divider(
                                   thickness: 1,
                                 ),
 
                                 Container(
-                                    padding: EdgeInsets.all(14.0),
+                                    padding: EdgeInsets.all(25.0),
                                     alignment: Alignment.centerLeft,
                                     child: Text(description,
                                         style: TextStyle(
@@ -353,11 +350,11 @@ class _DetailsState extends State<Details> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
-                                      left: 14.0, top: 20),
+                                      left: 25.0, top: 10),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      'More Items from $username :',
+                                      'More from $username :',
                                       style: TextStyle(
                                           fontSize: 20, color: Colors.black87),
                                     ),
@@ -368,7 +365,7 @@ class _DetailsState extends State<Details> {
                                   thickness: 1,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 14.0),
+                                  padding: const EdgeInsets.only(left: 25.0),
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(

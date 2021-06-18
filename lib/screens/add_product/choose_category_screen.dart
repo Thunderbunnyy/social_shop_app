@@ -19,15 +19,6 @@ class ChooseCategory extends StatefulWidget {
 }
 
 class _ChooseCategoryState extends State<ChooseCategory> {
-  // List<Category> categories = <Category>[];
-  // final Category category = Category();
-  //
-  // List<SubCategory> subcategories = <SubCategory>[];
-  // final SubCategory subCategory = SubCategory();
-
-  // final List<CategoryViewModel> categories;
-  //
-  // ChooseCategory({this.categories});
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +62,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                                 if (snapshot.data.success) {
                                   if (snapshot.data.result == null ||
                                       snapshot.data.results.isEmpty) {
-                                    return const Center(
-                                      child: Text('No Data'),
-                                    );
+                                    return Container();
                                   }
                                 }
                                 return ListView.builder(
@@ -101,9 +90,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                                       );
                                     });
                               } else {
-                                return const Center(
-                                  child: Text('No Data'),
-                                );
+                                return Container();
                               }
                             }),
                       ],
