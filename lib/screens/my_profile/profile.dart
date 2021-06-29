@@ -79,13 +79,13 @@ class _ProfileState extends State<Profile> {
               return CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    iconTheme: IconThemeData(color: Colors.black54),
+                    iconTheme: IconThemeData(color: Palette.coral),
                     // title: Text('My Profile',style: TextStyle(
                     //   color: Colors.black54,fontFamily: 'Montserrat'
                     // ),),
                     floating: true,
                     pinned: false,
-                    backgroundColor: Palette.lemon,
+                    backgroundColor: Color(0xffff),
                     expandedHeight: size.height * 0.3,
                     actions: [
                       IconButton(
@@ -240,7 +240,7 @@ class _ProfileState extends State<Profile> {
                                               deleteLocalUserData: true);
                                           Navigator.pop(context, true);
                                         },
-                                        child: Text('Logout'))
+                                        child: Text('Edit Profile',style: TextStyle(color: Palette.coral),))
                                   ],
                                 )
                               ],
@@ -271,7 +271,8 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ));
                           },
-                          onLongPress: () {},
+                          onLongPress: () {
+                          },
                           child: Container(
                             child: Stack(
                               children: [
@@ -290,14 +291,33 @@ class _ProfileState extends State<Profile> {
                                   top: 0,
                                   child: IconButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ModifyProductScreen(
-                                                    productId: id,
-                                                  ),
-                                            ));
+                                        return AlertDialog(
+                                          title: Text('product''s settings'),
+                                          content: ListView(
+                                            children: [
+                                              InkWell(
+                                                onTap: (){
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ModifyProductScreen(
+                                                              productId: id,
+                                                            ),
+                                                      ));
+                                                },
+                                                child: Text('Modify Product'),
+                                              ),
+                                              InkWell(
+                                                onTap: (){
+                                                  //todo delete
+                                                },
+                                                child: Text('Delete Product'),
+                                              )
+                                            ],
+                                          ),
+                                        );
+
                                       },
                                       icon: Icon(
                                         Icons.arrow_drop_down_circle,

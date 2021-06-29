@@ -24,12 +24,16 @@ class _ChooseCategoryState extends State<ChooseCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose Category'),
+        title: Text('Choose Category',style: TextStyle(
+          color: Colors.black54
+        ),),
+        backgroundColor: Colors.white,
         leading: IconButton(
             icon: Icon(Icons.arrow_back_rounded),
             onPressed: () {
               Navigator.pop(context);
             }),
+        iconTheme: IconThemeData(color: Colors.black54),
       ),
       body: FutureBuilder<ApiResponse>(
         future: widget._categoryProvider.getAll(),

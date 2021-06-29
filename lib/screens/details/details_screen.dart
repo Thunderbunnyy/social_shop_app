@@ -10,6 +10,7 @@ import 'package:social_shop_app/data/models/product.dart';
 import 'package:social_shop_app/data/repositories/products/provider_api_product.dart';
 import 'package:social_shop_app/screens/details/components/more_from_user.dart';
 import 'package:social_shop_app/screens/details/components/similar_items.dart';
+import 'package:social_shop_app/screens/payment/cart.dart';
 
 class Details extends StatefulWidget {
   final String productId;
@@ -331,7 +332,13 @@ class _DetailsState extends State<Details> {
                                         style: TextStyle(
                                             fontSize: 18, color: Colors.black87),
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Cart(id : productId),
+                                            ));
+                                      },
                                       color: Palette.lavender),
                                 ),
                                 Divider(
